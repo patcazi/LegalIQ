@@ -50,7 +50,7 @@ exports.searchDocuments = onCall({
 
         // Call the OpenAI Responses API with the file_search tool
         const response = await openai.responses.create({
-            model: "o1", // Or another suitable model
+            model: "gpt-4o-mini", // Or another suitable model
             input: query,
             tools: [{
                 type: "file_search",

@@ -68,14 +68,33 @@ function SearchComponent() {
       {/* Display Error Message */}
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
-      {/* Display Results (Basic) */}
-      {results && (
+      {/* Display Results */}
+      {results && results.content && (
         <div>
           <h3>Results:</h3>
-          {/* The actual content is likely nested, parse based on OpenAI response structure */}
-          {/* This is a basic example, you'll need to inspect the 'results' object structure */}
-          <pre>{JSON.stringify(results.content, null, 2)}</pre>
-          {/* You might want to render results.content[0].text and format annotations */}
+          {(() => {
+            const textOutput = results.content.find(item => item.type === 'output_text');
+            if (textOutput && textOutput.text) {
+              return (
+                <div>
+                  <p>{textOutput.text}</p>
+                  {textOutput.annotations && textOutput.annotations.length > 0 && (
+                    <div>
+                      <h4>Sources:</h4>
+                      <ul>
+                        {textOutput.annotations
+                          .filter(annotation => annotation.type === 'file_citation')
+                          .map((annotation, index) => (
+                            <li key={index}>Source: {annotation.filename}</li>
+                          ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            return null;
+          })()}
         </div>
       )}
     </div>
